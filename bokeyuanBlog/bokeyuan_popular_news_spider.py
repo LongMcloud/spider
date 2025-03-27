@@ -51,8 +51,8 @@ class cnBlogPopularNews(object):
             dicts['content'] = ''.join(''.join(news.xpath('./div[@class="content"]/div[@class="entry_summary"]/text()')).split('\n')).strip()
             dicts['coment'] = news.xpath('./div[@class="content"]/div[@class="entry_footer"]/span[1]/a/text()')[0]
             dicts['watch_number'] = news.xpath('./div[@class="content"]/div[@class="entry_footer"]/span[2]/text()')[0]
-            # dicts['mcn'] = news.xpath('./div[@class="content"]/div[@class="entry_footer"]/span[3]/a/text()')[0]
-            # dicts['date'] = news.xpath('./div[@class="content"]/div[@class="entry_footer"]/span[4]/text()')[0]
+            dicts['mcn'] = '无机构' if not news.xpath('./div[@class="content"]/div[@class="entry_footer"]/span[3]/a/text()') else news.xpath('./div[@class="content"]/div[@class="entry_footer"]/span[3]/a/text()')[0]
+            dicts['date'] = '无日期' if not news.xpath('./div[@class="content"]/div[@class="entry_footer"]/span[4]/text()') else news.xpath('./div[@class="content"]/div[@class="entry_footer"]/span[4]/text()')[0]
             pages_res.append(dicts)
 
         return pages_res
@@ -64,6 +64,7 @@ class cnBlogPopularNews(object):
         for index in range(1,pages+1):
             url = self.__url
             response_txt = self.__get_data(url=url,headers=self.__headers).text
+            print('正在采集第{}'.format(index))
             dicts['page{}'.format(index)] = self.__parse_data(response_txt)
         print(dicts)
 
